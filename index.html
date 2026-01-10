@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Advanced Networks Final Quiz (314 Questions)</title>
+  <title>Advanced Networks Final Quiz</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -26,19 +26,56 @@
     h1 {
       text-align: center;
       color: #2c3e50;
-      margin-bottom: 25px;
+      margin-bottom: 10px;
       font-size: 22px;
+    }
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 10px 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+    }
+    .score {
+      font-weight: bold;
+      color: #2c3e50;
+      font-size: 16px;
+    }
+    .progress-container {
+      flex-grow: 1;
+      margin: 0 20px;
+      background: #e9ecef;
+      border-radius: 10px;
+      height: 10px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #4dabf7, #339af0);
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+    .question-counter {
+      font-weight: bold;
+      color: #495057;
+      white-space: nowrap;
     }
     .question {
       font-size: 17px;
       margin-bottom: 20px;
       color: #333;
       line-height: 1.5;
+      padding: 10px 0;
+      border-bottom: 1px solid #e9ecef;
     }
     .options {
       display: flex;
       flex-direction: column;
       gap: 12px;
+      margin-bottom: 25px;
     }
     .option {
       padding: 13px 16px;
@@ -66,6 +103,9 @@
       font-weight: bold;
       font-size: 16px;
       min-height: 22px;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
     }
     .correct { color: #28a745; }
     .incorrect { color: #dc3545; }
@@ -74,15 +114,61 @@
       font-size: 20px;
       font-weight: bold;
       color: #2c3e50;
+      padding: 30px 0;
+    }
+    .navigation-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .nav-btn {
+      padding: 12px 24px;
+      background: #339af0;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover {
+      background: #228be6;
+    }
+    .nav-btn:disabled {
+      background: #adb5bd;
+      cursor: not-allowed;
+    }
+    .nav-btn.previous {
+      background: #495057;
+    }
+    .nav-btn.previous:hover {
+      background: #343a40;
     }
   </style>
 </head>
 <body>
   <div class="quiz-container">
     <h1>Advanced Networks Final Quiz (314 Questions)</h1>
+    
+    <div class="stats-bar">
+      <div class="score">Score: <span id="score">0</span></div>
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="question-counter">
+        Question <span id="current-q">1</span> of <span id="total-q">314</span>
+      </div>
+    </div>
+    
     <div class="question" id="question"></div>
     <div class="options" id="options"></div>
     <div class="feedback" id="feedback"></div>
+    
+    <div class="navigation-buttons">
+      <button class="nav-btn previous" id="prev-btn" disabled>← Previous</button>
+      <button class="nav-btn" id="next-btn">Next →</button>
+    </div>
   </div>
 
   <script>
@@ -531,11 +617,38 @@
     // State
     let currentQuestionIndex = 0;
     let score = 0;
+    let userAnswers = Array(questions.length).fill(null);
 
     // DOM elements
     const questionEl = document.getElementById("question");
     const optionsEl = document.getElementById("options");
     const feedbackEl = document.getElementById("feedback");
+    const scoreEl = document.getElementById("score");
+    const currentQEl = document.getElementById("current-q");
+    const totalQEl = document.getElementById("total-q");
+    const progressBar = document.getElementById("progress-bar");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+
+    // Initialize total questions
+    totalQEl.textContent = questions.length;
+
+    // Update progress and score display
+    function updateStats() {
+      scoreEl.textContent = score;
+      currentQEl.textContent = currentQuestionIndex + 1;
+      const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+      progressBar.style.width = `${progress}%`;
+      
+      // Update button states
+      prevBtn.disabled = currentQuestionIndex === 0;
+      
+      if (currentQuestionIndex >= questions.length - 1) {
+        nextBtn.textContent = "Finish";
+      } else {
+        nextBtn.textContent = "Next →";
+      }
+    }
 
     // Display current question
     function showQuestion() {
@@ -548,14 +661,31 @@
       questionEl.textContent = `${currentQuestionIndex + 1}. ${q.question}`;
       optionsEl.innerHTML = "";
       feedbackEl.textContent = "";
+      feedbackEl.className = "feedback";
 
+      // Check if user already answered this question
+      const userAnswer = userAnswers[currentQuestionIndex];
+      
       q.options.forEach((option, index) => {
         const button = document.createElement("div");
         button.classList.add("option");
-        button.textContent = String.fromCharCode(65 + index) + ". " + option; // A. B. C. D.
+        
+        // If user answered before, show the result
+        if (userAnswer !== null) {
+          if (index === q.answer) {
+            button.classList.add("correct");
+          } else if (index === userAnswer && userAnswer !== q.answer) {
+            button.classList.add("incorrect");
+          }
+          button.style.pointerEvents = "none";
+        }
+        
+        button.textContent = String.fromCharCode(65 + index) + ". " + option;
         button.onclick = () => selectOption(index);
         optionsEl.appendChild(button);
       });
+
+      updateStats();
     }
 
     // Handle option selection
@@ -566,11 +696,15 @@
       // Disable further clicks
       options.forEach(opt => opt.style.pointerEvents = "none");
 
+      // Store user answer
+      userAnswers[currentQuestionIndex] = selectedIndex;
+
       if (selectedIndex === q.answer) {
         options[selectedIndex].classList.add("correct");
         feedbackEl.textContent = "✓ Correct!";
         feedbackEl.className = "feedback correct";
         score++;
+        updateStats();
       } else {
         options[selectedIndex].classList.add("incorrect");
         options[q.answer].classList.add("correct");
@@ -578,23 +712,50 @@
         feedbackEl.className = "feedback incorrect";
       }
 
-      // Next question after 1 second
+      // Auto move to next question after 1 second
       setTimeout(() => {
-        currentQuestionIndex++;
-        showQuestion();
+        if (currentQuestionIndex < questions.length - 1) {
+          currentQuestionIndex++;
+          showQuestion();
+        }
       }, 1000);
     }
 
     // Show final score
     function showFinalScore() {
-      questionEl.innerHTML = `<div class="end-screen">Quiz Completed!<br>Your Score: ${score} / ${questions.length}</div>`;
+      const percentage = Math.round((score / questions.length) * 100);
+      questionEl.innerHTML = `
+        <div class="end-screen">
+          <h2>Quiz Completed!</h2>
+          <p>Your Score: ${score} / ${questions.length}</p>
+          <p>Percentage: ${percentage}%</p>
+        </div>
+      `;
       optionsEl.innerHTML = "";
       feedbackEl.textContent = "";
+      prevBtn.style.display = "none";
+      nextBtn.style.display = "none";
     }
+
+    // Navigation handlers
+    prevBtn.onclick = () => {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        showQuestion();
+      }
+    };
+
+    nextBtn.onclick = () => {
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        showQuestion();
+      } else {
+        showFinalScore();
+      }
+    };
 
     // Start quiz
     showQuestion();
   </script>
 </body>
 </html>
-
