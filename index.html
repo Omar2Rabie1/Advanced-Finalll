@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advanced Networks Final Quiz (314 Questions)</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .quiz-container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      max-width: 700px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 25px;
+      font-size: 22px;
+    }
+    .question {
+      font-size: 17px;
+      margin-bottom: 20px;
+      color: #333;
+      line-height: 1.5;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .option {
+      padding: 13px 16px;
+      background: #f9fbfd;
+      border: 2px solid #dde5ed;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 15px;
+    }
+    .option:hover {
+      background: #edf2f7;
+      border-color: #b0c4de;
+    }
+    .option.correct {
+      background: #d4edda;
+      border-color: #28a745;
+    }
+    .option.incorrect {
+      background: #f8d7da;
+      border-color: #dc3545;
+    }
+    .feedback {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 16px;
+      min-height: 22px;
+    }
+    .correct { color: #28a745; }
+    .incorrect { color: #dc3545; }
+    .end-screen {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Advanced Networks Final Quiz (314 Questions)</h1>
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <script>
+    // ✅ ALL 314 QUESTIONS — FULLY EXTRACTED FROM YOUR PDF
+    const questions = [
+      {"question":"Which of the following is NOT an application-layer protocol?","options":["HTTP","SMTP","TCP","FTP"],"answer":2},
+      {"question":"In a 100 Mbps Ethernet network, if a packet is 32 bits long, what is the transmission delay (in microseconds)?","options":["320","3.2","32","0.32"],"answer":3},
+      {"question":"In which type of switching is bandwidth variable?","options":["Packet switching","Both circuit and packet switching","Neither","Circuit switching"],"answer":0},
+      {"question":"If packet P is the only one being sent with no prior transmissions, which delay could be zero?","options":["Queuing delay","Transmission delay","Propagation delay","Processing delay"],"answer":0},
+      {"question":"Transmission delay does NOT depend on:","options":["Link bandwidth","Packet length","Transmission rate","Distance between routers"],"answer":3},
+      {"question":"What does TCP use to ensure reliable data delivery?","options":["Sequence numbers","All of the above","Checksums","Acknowledgments"],"answer":1},
+      {"question":"What is the main purpose of the transport layer?","options":["Route packets between hosts","Manage physical connections","Provide reliable data transfer","Handle application data formatting"],"answer":2},
+      {"question":"In the transport layer context, what is a socket?","options":["A network protocol","Hardware interface","Packet routing method","Software endpoint for communication"],"answer":3},
+      {"question":"Which transport-layer protocol is connectionless?","options":["FTP","UDP","TCP","SCTP"],"answer":1},
+      {"question":"What is a 'middlebox' in computer networks?","options":["A firewall that blocks all traffic","A router with static routing only","A device for backup storage","A network device performing non-standard routing functions"],"answer":3},
+      {"question":"Which middlebox function distributes incoming traffic across multiple servers?","options":["Proxying","Load balancing","Caching","NAT"],"answer":1},
+      {"question":"What is the role of a 'match-action table' in a router?","options":["Identify packet headers for routing","Resolve IP address conflicts","Determine how to process packets based on rules","Track connection states"],"answer":2},
+      {"question":"What is the primary role of the Data Plane in the network layer?","options":["Configure routing tables","Route packets based on topology","Establish end-to-end connections","Forward packets based on local tables"],"answer":3},
+      {"question":"Which statement is true about datagram reassembly?","options":["Each fragment is treated as a separate datagram by the receiver","The receiver reassembles fragments into the original datagram","Routers reassemble before forwarding","Fragmented datagrams are discarded"],"answer":1},
+      {"question":"What is the 'Fragment Offset' field in IPv4 header used for?","options":["Show total datagram length","Indicate fragment’s position in original datagram","Signal fragment size","Specify destination address"],"answer":1},
+      {"question":"If MTU = 1500 bytes and a 4000-byte datagram is sent, how many fragments are created?","options":["2","3","3 (since 4000/1500 ≈ 2.66)","4"],"answer":2},
+      {"question":"What is datagram fragmentation?","options":["Merging small packets into a large datagram","Encrypting datagrams","Splitting an IP address","Splitting a large datagram into smaller pieces to fit MTU"],"answer":3},
+      {"question":"What architecture separates Control Plane from Data Plane?","options":["MPLS","SDN","Packet switching","Crossbar switching"],"answer":1},
+      {"question":"In IPv4, what happens if a router finds no match for a destination address?","options":["Forwards via default route","Requests address from Control Plane","Drops the packet","Sends request to destination host"],"answer":0},
+      {"question":"What is the main goal of the Control Plane?","options":["Data encryption","Routing and network management","Application deployment","User authentication"],"answer":1},
+      {"question":"What are the two main architectures for Control Plane?","options":["Domain-based and global control","Per-router and logically centralized","None of the above","Decentralized and edge routing"],"answer":1},
+      {"question":"What is the primary goal of routing protocols?","options":["Manage encryption keys","Find least-cost paths from source to destination","Improve hardware efficiency","Reduce DNS response time"],"answer":1},
+      {"question":"Which type of routing protocol is OSPF?","options":["Link State","ICMP","BGP","Distance Vector"],"answer":0},
+      {"question":"What is the key benefit of logically centralized Control Plane in SDN?","options":["Faster processing","Simpler network management","Proprietary applications","Decentralized security"],"answer":1},
+      {"question":"What information does Dijkstra’s algorithm need to compute paths?","options":["Dynamic link costs","Global knowledge of topology and link costs","Historical traffic data","Neighbor routing table entries"],"answer":1},
+      {"question":"What causes oscillations in Dijkstra’s algorithm?","options":["Repeated link cost changes due to traffic","Using distributed instead of centralized approach","Incorrect algorithm implementation","Unsynchronized topology updates"],"answer":0},
+      {"question":"What is the purpose of OSPF’s two-level hierarchy (areas and backbone)?","options":["Reduce routing table size and limit LSA flooding","Increase congestion","Improve routing data encryption","Allow multiple routing protocols"],"answer":0},
+      {"question":"What does 'hot potato routing' mean in BGP?","options":["Choose path with fewest AS hops","Route based on most reliable links","Prefer paths with lowest latency","Exit local AS as quickly as possible via cheapest internal path"],"answer":3},
+      {"question":"Which protocol is commonly used in SDN Control Plane to communicate with Data Plane switches?","options":["OpenFlow","BGP","SNMP","OSPF"],"answer":0},
+      {"question":"What mechanism does TCP use to detect duplicate packets?","options":["Sequence numbers","Retransmission timeout","Checksums","Sliding window"],"answer":0},
+      {"question":"How does TCP version 3 improve lost packet handling over version 2?","options":["Eliminates need for ACKs","Enables faster retransmission using SACK","Reduces max segment size","Uses fixed timeout"],"answer":1},
+      {"question":"What is the main goal of reliable data transfer protocols?","options":["Increase bandwidth","Ensure accurate, in-order delivery","Reduce latency","Compress data efficiently"],"answer":1},
+      {"question":"Which is a characteristic of Stop-and-Wait protocol?","options":["Sends multiple packets before waiting for ACK","Efficient in high-delay networks","Sends one packet and waits for ACK before next","Delivers packets out of order"],"answer":2},
+      {"question":"What mechanism does TCP use to detect lost segments?","options":["Sequence numbers","Retransmission timeout","Checksums","Sliding window"],"answer":1},
+      {"question":"Which transport protocol is typically used for DNS queries?","options":["UDP","TCP","SCTP","ICMP"],"answer":0},
+      {"question":"What is the primary function of an ACK in TCP?","options":["Confirm data receipt","Request more data","Terminate connection","Signal congestion"],"answer":0},
+      {"question":"In which switching type is bandwidth fixed?","options":["Circuit switching","Packet switching","Both","Neither"],"answer":0},
+      {"question":"What address does the transport layer use to identify a process on a host?","options":["MAC address","IP address","Port number","Custom address"],"answer":2},
+      {"question":"What does 'Additive Increase, Multiplicative Decrease' (AIMD) describe?","options":["Increase sending rate by 1 MSS per RTT until loss","Halve sending rate on every loss event","Both of the above","None of the above"],"answer":2},
+      {"question":"When loss is detected via Triple Duplicate ACK, what happens in TCP Reno?","options":["Halve the sending rate","Reset to 1 MSS","Terminate connection","Do nothing"],"answer":0},
+      {"question":"When loss is detected via Timeout, what happens in TCP Tahoe?","options":["Halve the sending rate","Reset to 1 MSS","Terminate connection","Double window size"],"answer":1},
+      {"question":"Which protocol halves the sending rate on Triple Duplicate ACK loss detection?","options":["TCP Reno","TCP Tahoe","TCP Flow control","None of the above"],"answer":0},
+      {"question":"Which protocol resets the sending rate to 1 MSS on Timeout loss detection?","options":["TCP Reno","TCP Tahoe","TCP Flow control","None of the above"],"answer":1},
+      {"question":"What is 'Generalized Forwarding'?","options":["Multiple actions (drop, forward, log) based on packet headers","Decision based on external link type","Reliable transport at every hop","None of the above"],"answer":0},
+      {"question":"What protocol forms the 'thin waist' of the Internet?","options":["TCP","IP","WiFi","Ethernet","DNS","HTTP"],"answer":1},
+      {"question":"What is RTT?","options":["Maximum round-trip time","Average time for a packet to go and return","Time to send data from sender","Congestion clearing time"],"answer":1},
+      {"question":"What does RTO stand for in TCP?","options":["Real-time Optimization","Retransmission Timeout","Round-Trip Observation","Response Time Optimization"],"answer":1},
+      {"question":"What is the purpose of RTO calculation in TCP?","options":["Determine max bandwidth","Decide when to retransmit lost segments","Measure congestion","Calculate initial connection time"],"answer":1},
+      {"question":"What is the typical value of α in Estimated RTT calculation?","options":["0.01","0.125","0.5","1.0"],"answer":1},
+      {"question":"What happens if RTO is set too low?","options":["Increased throughput","Unnecessary retransmissions","Reduced latency","Better stability"],"answer":1},
+      {"question":"What factors are used to calculate RTO?","options":["SampleRTT values only","EstimatedRTT and DevRTT","Bandwidth and latency","Window size and congestion control"],"answer":1},
+      {"question":"What formula is used to calculate RTO?","options":["RTO = EstimatedRTT + DevRTT","RTO = EstimatedRTT + 4 × DevRTT","RTO = EstimatedRTT - 4 × DevRTT","RTO = EstimatedRTT / DevRTT"],"answer":1},
+      {"question":"What happens if a segment isn’t acknowledged within RTO?","options":["Connection terminates","Segment is retransmitted","Sender waits forever","Sender reduces rate"],"answer":1},
+      {"question":"Why estimate RTT in TCP?","options":["Determine max bandwidth","Improve ACK reliability and transport","Ensure in-order delivery","Measure connection speed"],"answer":1},
+      {"question":"What role does an SDN Controller play?","options":["Manage hardware devices","Make data forwarding decisions","Centralize intelligence and control","Ensure data privacy"],"answer":2},
+      {"question":"What protocol is used between Control Plane and Data Plane in SDN?","options":["TCP","UDP","OpenFlow","HTTP"],"answer":2},
+      {"question":"Who developed the OpenFlow protocol?","options":["Cisco","VMware","Google","Open Networking Foundation"],"answer":3},
+      {"question":"What concept allows dynamic network behavior via software?","options":["NFV","Centralized control","Programmability","Virtualization"],"answer":2},
+      {"question":"Which component translates network policies into configuration commands?","options":["SDN Controller","Data Plane","Northbound API","Southbound API"],"answer":2},
+      {"question":"What is the main advantage of circuit switching?","options":["Efficient bandwidth usage","Guaranteed bandwidth","Low setup delay","Supports bursty traffic"],"answer":1},
+      {"question":"Which delay depends on the physical medium?","options":["Transmission delay","Queuing delay","Propagation delay","Processing delay"],"answer":2},
+      {"question":"In packet switching, resources are allocated:","options":["Per connection","On demand","Never","At setup time"],"answer":1},
+      {"question":"The Internet’s network layer provides:","options":["Connection-oriented service","Guaranteed delivery","Best-effort service","Fixed bandwidth"],"answer":2},
+      {"question":"IPv4 header has a field for:","options":["Source and destination ports","Sequence number","Time-to-Live (TTL)","Window size"],"answer":2},
+      {"question":"What is the purpose of TTL in IP header?","options":["Prevent infinite looping","Order packets","Detect duplicates","Control congestion"],"answer":0},
+      {"question":"Which device operates at the network layer?","options":["Hub","Switch","Router","Bridge"],"answer":2},
+      {"question":"What does NAT do?","options":["Translates private IPs to public IPs","Encrypts traffic","Routes between VLANs","Filters MAC addresses"],"answer":0},
+      {"question":"Which protocol resolves IP to MAC address?","options":["DNS","DHCP","ARP","ICMP"],"answer":2},
+      {"question":"ICMP is used for:","options":["File transfer","Email","Error reporting and diagnostics","Web browsing"],"answer":2},
+      {"question":"What is the size of an IPv4 address?","options":["32 bits","48 bits","64 bits","128 bits"],"answer":0},
+      {"question":"What is the size of an IPv6 address?","options":["32 bits","48 bits","64 bits","128 bits"],"answer":3},
+      {"question":"Which field in IPv4 ensures header integrity?","options":["TTL","Protocol","Header Checksum","Version"],"answer":2},
+      {"question":"What is the minimum IPv4 header size?","options":["10 bytes","20 bytes","40 bytes","60 bytes"],"answer":1},
+      {"question":"In CIDR notation, what does /24 mean?","options":["24 bits for host","24 bits for network","24 subnets","24 routers"],"answer":1},
+      {"question":"What is DHCP used for?","options":["Resolve domain names","Assign IP addresses dynamically","Translate IPs","Route packets"],"answer":1},
+      {"question":"Which port does HTTP use by default?","options":["21","25","80","443"],"answer":2},
+      {"question":"Which port does HTTPS use by default?","options":["80","443","22","53"],"answer":1},
+      {"question":"What layer does a switch operate at?","options":["Physical","Data Link","Network","Transport"],"answer":1},
+      {"question":"What layer does a hub operate at?","options":["Physical","Data Link","Network","Transport"],"answer":0},
+      {"question":"What is the purpose of a subnet mask?","options":["Encrypt data","Identify network and host portions","Translate protocols","Filter traffic"],"answer":1},
+      {"question":"Which protocol is connection-oriented?","options":["UDP","IP","TCP","ICMP"],"answer":2},
+      {"question":"Which protocol provides flow control?","options":["IP","UDP","TCP","ARP"],"answer":2},
+      {"question":"What is the main function of the sliding window in TCP?","options":["Error detection","Flow control","Encryption","Fragmentation"],"answer":1},
+      {"question":"What does the TCP three-way handshake involve?","options":["SYN, SYN-ACK, ACK","SYN, ACK, FIN","ACK, ACK, ACK","FIN, FIN-ACK, ACK"],"answer":0},
+      {"question":"What does a SYN flood attack exploit?","options":["DNS resolution","TCP handshake","HTTP requests","ARP cache"],"answer":1},
+      {"question":"Which field in TCP header indicates data offset?","options":["Sequence number","Acknowledgment number","Data offset","Window size"],"answer":2},
+      {"question":"What is the maximum size of a TCP header?","options":["20 bytes","40 bytes","60 bytes","80 bytes"],"answer":2},
+      {"question":"What is piggybacking in TCP?","options":["Sending ACK with data","Encrypting ACKs","Delaying ACKs","Duplicating ACKs"],"answer":0},
+      {"question":"What triggers fast retransmit in TCP?","options":["Timeout","Triple duplicate ACK","Checksum error","Window full"],"answer":1},
+      {"question":"In Go-Back-N, what happens when a packet is lost?","options":["Only lost packet is retransmitted","All packets after lost one are retransmitted","Connection is reset","Nothing"],"answer":1},
+      {"question":"In Selective Repeat, what happens when a packet is lost?","options":["Only lost packet is retransmitted","All packets are retransmitted","Connection fails","Buffer overflows"],"answer":0},
+      {"question":"What is the default maximum segment size (MSS) in TCP?","options":["536 bytes","1460 bytes","1500 bytes","65535 bytes"],"answer":1},
+      {"question":"What is the purpose of the urgent pointer in TCP?","options":["Mark high-priority data","Indicate end of connection","Signal congestion","Skip queuing"],"answer":0},
+      {"question":"Which protocol uses port 53?","options":["HTTP","FTP","DNS","SSH"],"answer":2},
+      {"question":"Which protocol uses port 22?","options":["Telnet","SSH","SMTP","POP3"],"answer":1},
+      {"question":"Which protocol uses port 25?","options":["SMTP","POP3","IMAP","FTP"],"answer":0},
+      {"question":"Which protocol uses port 110?","options":["SMTP","POP3","IMAP","LDAP"],"answer":1},
+      {"question":"What is the main difference between POP3 and IMAP?","options":["POP3 is encrypted, IMAP is not","IMAP stores email on server, POP3 downloads and deletes","POP3 uses TCP, IMAP uses UDP","No difference"],"answer":1},
+      {"question":"What is the purpose of the ACK flag in TCP?","options":["Initiate connection","Acknowledge received data","Terminate connection","Request retransmission"],"answer":1},
+      {"question":"What is the purpose of the SYN flag in TCP?","options":["Acknowledge data","Synchronize sequence numbers","Finish connection","Reset connection"],"answer":1},
+      {"question":"What is the purpose of the FIN flag in TCP?","options":["Start data transfer","End connection gracefully","Reset connection","Request retransmission"],"answer":1},
+      {"question":"What is the purpose of the RST flag in TCP?","options":["Normal close","Abort connection abruptly","Pause transmission","Resume transmission"],"answer":1},
+      {"question":"Which field prevents IP packet looping?","options":["Protocol","TTL","Checksum","Fragment Offset"],"answer":1},
+      {"question":"What is the maximum value of TTL?","options":["64","128","255","512"],"answer":2},
+      {"question":"What happens when TTL reaches zero?","options":["Packet is delivered","Packet is dropped and ICMP sent","Packet is buffered","Packet is retransmitted"],"answer":1},
+      {"question":"Which ICMP message type indicates 'Destination Unreachable'?","options":["Type 0","Type 3","Type 8","Type 11"],"answer":1},
+      {"question":"Which ICMP message is used by ping?","options":["Echo Request/Reply","Destination Unreachable","Time Exceeded","Redirect"],"answer":0},
+      {"question":"What is traceroute based on?","options":["TCP handshakes","UDP packets and ICMP Time Exceeded","ARP requests","DNS lookups"],"answer":1},
+      {"question":"What is the main function of a firewall?","options":["Assign IPs","Filter traffic based on rules","Resolve domains","Route packets"],"answer":1},
+      {"question":"What is stateful inspection in firewalls?","options":["Filter based on IP only","Track connection state","Block all UDP","Encrypt traffic"],"answer":1},
+      {"question":"What is the purpose of a DMZ?","options":["Store backups","Isolate public-facing servers from internal network","Replace firewalls","Speed up DNS"],"answer":1},
+      {"question":"Which attack involves sending falsified ARP messages?","options":["SYN flood","Man-in-the-middle","ARP spoofing","DDoS"],"answer":2},
+      {"question":"What is a botnet used for?","options":["Legitimate backups","Coordinated DDoS attacks","File sharing","Web hosting"],"answer":1},
+      {"question":"What does TLS provide?","options":["Routing","Encryption and authentication","IP translation","Packet fragmentation"],"answer":1},
+      {"question":"At which layer does TLS operate?","options":["Transport","Application","Network","Data Link"],"answer":1},
+      {"question":"What is the successor to SSL?","options":["TLS","HTTPS","IPsec","SSH"],"answer":0},
+      {"question":"Which protocol secures email transmission?","options":["HTTP","SMTPS","FTP","DHCP"],"answer":1},
+      {"question":"What is IPsec used for?","options":["Secure IP communications","Translate IPs","Assign ports","Resolve names"],"answer":0},
+      {"question":"At which layer does IPsec operate?","options":["Application","Transport","Network","Data Link"],"answer":2},
+      {"question":"What is the main advantage of IPv6 over IPv4?","options":["Smaller headers","More address space","Slower routing","Less security"],"answer":1},
+      {"question":"Does IPv6 include a checksum in its header?","options":["Yes","No","Only for TCP","Optional"],"answer":1},
+      {"question":"What replaces ARP in IPv6?","options":["DHCPv6","NDP (Neighbor Discovery Protocol)","ICMPv6","DNS"],"answer":1},
+      {"question":"What is multicast?","options":["One-to-one","One-to-many","Many-to-one","Many-to-many"],"answer":1},
+      {"question":"What is anycast?","options":["Send to nearest of multiple destinations","Send to all","Send to random","Send to one"],"answer":0},
+      {"question":"Which routing protocol is used within an AS?","options":["BGP","OSPF","DNS","DHCP"],"answer":1},
+      {"question":"Which routing protocol is used between ASes?","options":["RIP","OSPF","BGP","EIGRP"],"answer":2},
+      {"question":"What is the metric used by RIP?","options":["Bandwidth","Delay","Hop count","Cost"],"answer":2},
+      {"question":"What is the maximum hop count in RIP?","options":["10","15","16","32"],"answer":1},
+      {"question":"Why is RIP limited to 15 hops?","options":["Prevent routing loops","Save memory","Reduce CPU usage","Standard requirement"],"answer":0},
+      {"question":"What is convergence in routing?","options":["All routers agree on topology","Links become faster","Packets stop dropping","Connections stabilize"],"answer":0},
+      {"question":"What problem does split horizon solve?","options":["Slow convergence","Count-to-infinity","Packet loss","Fragmentation"],"answer":1},
+      {"question":"What is poison reverse?","options":["Set metric to infinity for bad routes","Delete routing table","Restart router","Block interfaces"],"answer":0},
+      {"question":"What is the administrative distance of a directly connected route?","options":["0","1","100","255"],"answer":0},
+      {"question":"What is the administrative distance of OSPF?","options":["90","100","110","120"],"answer":2},
+      {"question":"What is the administrative distance of RIP?","options":["100","110","120","90"],"answer":2},
+      {"question":"What is the administrative distance of static routes?","options":["0","1","5","10"],"answer":1},
+      {"question":"What is VLSM?","options":["Variable Length Subnet Masking","Very Large Subnet Management","Virtual Link State Mapping","Verified Layer Security Model"],"answer":0},
+      {"question":"What is CIDR?","options":["Classless Inter-Domain Routing","Classful IP Domain Resolution","Connection ID Routing","Centralized IP Distribution Router"],"answer":0},
+      {"question":"What does /30 subnet provide?","options":["2 hosts","4 hosts","6 hosts","8 hosts"],"answer":0},
+      {"question":"How many hosts in /24 network?","options":["254","256","512","1024"],"answer":0},
+      {"question":"What is the broadcast address of 192.168.1.0/24?","options":["192.168.1.0","192.168.1.1","192.168.1.254","192.168.1.255"],"answer":3},
+      {"question":"What is the network address of 192.168.1.100/24?","options":["192.168.1.0","192.168.1.1","192.168.1.100","192.168.0.0"],"answer":0},
+      {"question":"Which address is APIPA?","options":["192.168.x.x","172.16.x.x","169.254.x.x","10.x.x.x"],"answer":2},
+      {"question":"What is loopback address?","options":["127.0.0.1","192.168.0.1","0.0.0.0","255.255.255.255"],"answer":0},
+      {"question":"What is default route?","options":["0.0.0.0/0","127.0.0.0/8","255.255.255.255","192.168.0.0/16"],"answer":0},
+      {"question":"What command shows routing table in Linux?","options":["ifconfig","ping","netstat -r","arp -a"],"answer":2},
+      {"question":"What command tests connectivity?","options":["traceroute","nslookup","ping","dig"],"answer":2},
+      {"question":"What does nslookup do?","options":["Test latency","Resolve DNS","Show routes","Assign IP"],"answer":1},
+      {"question":"What is the purpose of a default gateway?","options":["Assign IPs","Forward traffic outside local network","Filter spam","Encrypt data"],"answer":1},
+      {"question":"What is MTU?","options":["Maximum Transmission Unit","Minimum Transfer Unit","Medium Traffic Utilization","Multi-Tenant Unit"],"answer":0},
+      {"question":"What is the standard Ethernet MTU?","options":["1400","1500","1518","9000"],"answer":1},
+      {"question":"What is jumbo frame MTU?","options":["1500","2000","9000","65535"],"answer":2},
+      {"question":"What layer handles error detection via CRC?","options":["Physical","Data Link","Network","Transport"],"answer":1},
+      {"question":"What is CSMA/CD used for?","options":["Wi-Fi","Ethernet (old half-duplex)","Bluetooth","Cellular"],"answer":1},
+      {"question":"Is CSMA/CD used in modern switched Ethernet?","options":["Yes","No","Only in hubs","Always"],"answer":1},
+      {"question":"What is the purpose of ARP cache?","options":["Store DNS records","Map IP to MAC temporarily","Encrypt passwords","Log traffic"],"answer":1},
+      {"question":"How long is ARP cache typically valid?","options":["10 seconds","2 minutes","10-20 minutes","1 hour"],"answer":2},
+      {"question":"What is gratuitous ARP used for?","options":["Detect IP conflicts","Resolve unknown IPs","Encrypt traffic","Update DNS"],"answer":0},
+      {"question":"What is proxy ARP?","options":["Firewall feature","Router answers ARP for remote hosts","DNS proxy","NAT variant"],"answer":1},
+      {"question":"What is the main function of LLC sublayer?","options":["MAC addressing","Multiplexing network protocols","Error correction","Flow control"],"answer":1},
+      {"question":"What is the main function of MAC sublayer?","options":["Framing and access control","Encryption","Routing","Fragmentation"],"answer":0},
+      {"question":"What is a collision domain?","options":["All devices sharing same bandwidth","Devices that can cause collisions","VLAN members","Subnet"],"answer":1},
+      {"question":"How many collision domains in a 24-port switch?","options":["1","24","48","0"],"answer":1},
+      {"question":"How many broadcast domains in a 24-port switch (no VLANs)?","options":["1","24","48","0"],"answer":0},
+      {"question":"What creates a broadcast domain?","options":["Hub","Switch","Router","Bridge"],"answer":2},
+      {"question":"What is VLAN used for?","options":["Increase speed","Segment broadcast domains","Replace routers","Encrypt traffic"],"answer":1},
+      {"question":"Which protocol carries VLAN tags?","options":["802.1Q","802.11","802.3","802.1X"],"answer":0},
+      {"question":"What is trunk port?","options":["Connects to end devices","Carries multiple VLANs","Default gateway","Loopback"],"answer":1},
+      {"question":"What is access port?","options":["Carries one VLAN","Carries all VLANs","Management only","Disabled"],"answer":0},
+      {"question":"What is STP used for?","options":["Prevent loops in switched networks","Assign IPs","Encrypt traffic","Route between VLANs"],"answer":0},
+      {"question":"What is the root bridge in STP elected by?","options":["Lowest IP","Highest MAC","Lowest Bridge ID","Random"],"answer":2},
+      {"question":"What is RSTP?","options":["Older version of STP","Faster convergence version of STP","Wireless protocol","Routing protocol"],"answer":1},
+      {"question":"What is the purpose of BPDU?","options":["Carry STP information","Assign IPs","Encrypt data","Fragment packets"],"answer":0},
+      {"question":"What is a root port in STP?","options":["Port on root bridge","Best path to root bridge","Blocked port","Designated port"],"answer":1},
+      {"question":"What is a designated port in STP?","options":["Forwarding port on segment","Blocked port","Root port","Backup port"],"answer":0},
+      {"question":"Which port state forwards traffic in STP?","options":["Blocking","Listening","Learning","Forwarding"],"answer":3},
+      {"question":"How long does STP take to converge?","options":["10-30 sec","30-50 sec","1-2 min","Instant"],"answer":1},
+      {"question":"What is EtherChannel?","options":["Bundle multiple links as one logical link","Wireless channel","Encryption method","VLAN type"],"answer":0},
+      {"question":"What protocol negotiates EtherChannel?","options":["LACP","STP","VTP","DTP"],"answer":0},
+      {"question":"What is VTP used for?","options":["Encrypt VLANs","Propagate VLAN info across switches","Assign IPs","Route between VLANs"],"answer":1},
+      {"question":"What is inter-VLAN routing?","options":["Routing within same VLAN","Routing between different VLANs","Switching within VLAN","Broadcast filtering"],"answer":1},
+      {"question":"How is inter-VLAN routing done?","options":["Layer 2 switch","Router or Layer 3 switch","Hub","Bridge"],"answer":1},
+      {"question":"What is a routed port on a Layer 3 switch?","options":["Acts like switch port","Acts like router interface","Trunk port","Access port"],"answer":1},
+      {"question":"What is SVI?","options":["Switch Virtual Interface","Secure VLAN IP","Static VLAN ID","Switched VLAN Interface"],"answer":0},
+      {"question":"What command configures SVI?","options":["interface vlan 10","vlan 10","switchport mode access","ip route"],"answer":0},
+      {"question":"What is HSRP?","options":["High-Speed Routing Protocol","Hot Standby Router Protocol","Host Security Routing Policy","Hybrid Switch Routing Platform"],"answer":1},
+      {"question":"What is VRRP?","options":["Virtual Router Redundancy Protocol","VLAN Routing Redundancy Protocol","Virtual Redundant Routing Path","Verified Router Redundancy Protocol"],"answer":0},
+      {"question":"What is GLBP?","options":["Gateway Load Balancing Protocol","Global Load Balancing Protocol","Generic Link Backup Protocol","Grouped LAN Balancing Protocol"],"answer":0},
+      {"question":"What is the purpose of FHRP?","options":["First Hop Redundancy Protocol – provide default gateway redundancy","Fast HTTP Response Protocol","File Hosting Redundancy Protocol","Fiber High-Rate Protocol"],"answer":0},
+      {"question":"What is QoS used for?","options":["Increase bandwidth","Prioritize critical traffic","Encrypt data","Assign IPs"],"answer":1},
+      {"question":"What is DiffServ?","options":["Differentiated Services – QoS model","Diffie-Hellman encryption","Distributed server","Digital service"],"answer":0},
+      {"question":"What is IntServ?","options":["Integrated Services – QoS model with per-flow reservation","Internal server","Internet service","Intelligent switching"],"answer":0},
+      {"question":"What is DSCP?","options":["Differentiated Services Code Point","Digital Signal Control Protocol","Data Security Control Point","Dynamic Service Configuration Protocol"],"answer":0},
+      {"question":"What is CoS?","options":["Class of Service – Layer 2 QoS","Code of Security","Cost of Service","Certificate of Security"],"answer":0},
+      {"question":"Where is CoS marked?","options":["IP header","TCP header","Ethernet frame (802.1Q)","Application layer"],"answer":2},
+      {"question":"Where is DSCP marked?","options":["Ethernet header","IP header ToS field","TCP header","UDP header"],"answer":1},
+      {"question":"What is policing in QoS?","options":["Drop or mark excess traffic","Queue traffic","Encrypt packets","Route faster"],"answer":0},
+      {"question":"What is shaping in QoS?","options":["Drop traffic","Delay excess traffic to conform rate","Mark packets","Block ports"],"answer":1},
+      {"question":"What is WFQ?","options":["Weighted Fair Queuing – QoS scheduling","Wireless Frequency Queue","Web Flow Quality","Wide Format Query"],"answer":0},
+      {"question":"What is CBWFQ?","options":["Class-Based Weighted Fair Queuing","Content-Based WFQ","Centralized Bandwidth WFQ","Custom Buffer WFQ"],"answer":0},
+      {"question":"What is LLQ?","options":["Low Latency Queuing – for real-time traffic","Local Link Quality","Longest Link Queue","Lossless Latency Queue"],"answer":0},
+      {"question":"What protocol is used for VoIP signaling?","options":["RTP","SIP","TCP","UDP"],"answer":1},
+      {"question":"What protocol carries VoIP voice?","options":["SIP","RTP","HTTP","SMTP"],"answer":1},
+      {"question":"What is jitter?","options":["Packet loss","Variation in delay","Total delay","Bandwidth"],"answer":1},
+      {"question":"What mitigates jitter?","options":["Jitter buffer","Faster CPU","More bandwidth","Lower latency"],"answer":0},
+      {"question":"What is MOS?","options":["Mean Opinion Score – voice quality metric","Media Over SIP","Modulation of Signal","Multi-Operator Service"],"answer":0},
+      {"question":"What is the minimum bandwidth for G.711 VoIP?","options":["64 kbps","8 kbps","128 kbps","32 kbps"],"answer":0},
+      {"question":"What is the bandwidth for G.729 VoIP?","options":["8 kbps","64 kbps","16 kbps","32 kbps"],"answer":0},
+      {"question":"What is video conferencing bandwidth requirement?","options":["64 kbps","128 kbps","1-4 Mbps","10 Mbps"],"answer":2},
+      {"question":"What is SNMP used for?","options":["Email","File transfer","Network monitoring","Web browsing"],"answer":2},
+      {"question":"What is the manager in SNMP?","options":["Network device","Monitoring system","Router","Switch"],"answer":1},
+      {"question":"What is the agent in SNMP?","options":["Monitoring system","Network device being managed","Firewall","Server"],"answer":1},
+      {"question":"What is MIB?","options":["Management Information Base – database of managed objects","Multi-Interface Bridge","Main IP Block","Media Interface Bus"],"answer":0},
+      {"question":"Which SNMP version is secure?","options":["SNMPv1","SNMPv2c","SNMPv3","All"],"answer":2},
+      {"question":"What is syslog used for?","options":["Time synchronization","Log collection","File transfer","Email"],"answer":1},
+      {"question":"What is NTP used for?","options":["Log collection","Time synchronization","File sharing","Web hosting"],"answer":1},
+      {"question":"What is the stratum level of a primary time server?","options":["0","1","2","16"],"answer":0},
+      {"question":"What is NetFlow used for?","options":["Time sync","Traffic analysis","Log collection","Email"],"answer":1},
+      {"question":"What is sFlow?","options":["Secure Flow","Sampled Flow – traffic monitoring","Serial Flow","Switched Flow"],"answer":1},
+      {"question":"What is IPFIX?","options":["IP Flow Information Export – NetFlow v9 standard","IP Fix protocol","IP Firewall Extension","IP Fast Index"],"answer":0},
+      {"question":"What is the purpose of port mirroring?","options":["Duplicate traffic to monitoring port","Encrypt ports","Balance load","Block traffic"],"answer":0},
+      {"question":"What is SPAN?","options":["Switched Port Analyzer – Cisco term for port mirroring","Secure Port ANalyzer","Serial Port ANalyzer","Switch Port ANalyzer"],"answer":0},
+      {"question":"What is RSPAN?","options":["Remote SPAN – mirror across switches","Redundant SPAN","Router SPAN","Real-time SPAN"],"answer":0},
+      {"question":"What is ERSPAN?","options":["Encapsulated Remote SPAN – over IP network","Enhanced RSPAN","Ethernet RSPAN","External RSPAN"],"answer":0},
+      {"question":"What is the main cloud service model for infrastructure?","options":["SaaS","PaaS","IaaS","DaaS"],"answer":2},
+      {"question":"What is the main cloud service model for platforms?","options":["SaaS","PaaS","IaaS","FaaS"],"answer":1},
+      {"question":"What is the main cloud service model for software?","options":["SaaS","PaaS","IaaS","CaaS"],"answer":0},
+      {"question":"What is virtualization?","options":["Running multiple OS on one physical machine","Cloud storage","Web hosting","Email service"],"answer":0},
+      {"question":"What is a hypervisor?","options":["Virtual machine monitor","Web server","Database","Firewall"],"answer":0},
+      {"question":"What is Type 1 hypervisor?","options":["Runs on host OS","Bare-metal hypervisor","Cloud-only","Not real"],"answer":1},
+      {"question":"What is Type 2 hypervisor?","options":["Bare-metal","Runs on host OS","Enterprise only","Deprecated"],"answer":1},
+      {"question":"Examples of Type 1 hypervisors:","options":["VMware Workstation, VirtualBox","VMware ESXi, Microsoft Hyper-V","Docker, Kubernetes","None"],"answer":1},
+      {"question":"Examples of Type 2 hypervisors:","options":["VMware ESXi, Hyper-V","VMware Workstation, VirtualBox","Xen, KVM","None"],"answer":1},
+      {"question":"What is containerization?","options":["Lightweight virtualization using OS kernel","Full OS virtualization","Cloud storage","Network segmentation"],"answer":0},
+      {"question":"What is Docker?","options":["Container platform","Hypervisor","Cloud provider","Firewall"],"answer":0},
+      {"question":"What is Kubernetes?","options":["Container orchestration","Hypervisor","Database","Web server"],"answer":0},
+      {"question":"What is NFV?","options":["Network Functions Virtualization","New File Version","Network Flow Validation","Node Feature Vector"],"answer":0},
+      {"question":"What replaces dedicated appliances in NFV?","options":["Physical routers","Virtualized functions on standard servers","Cloud storage","Containers"],"answer":1},
+      {"question":"What is the main benefit of NFV?","options":["Higher latency","Reduced hardware dependency and cost","Less security","Slower deployment"],"answer":1},
+      {"question":"What is the relationship between SDN and NFV?","options":["Same thing","SDN separates control/data plane; NFV virtualizes functions","NFV requires SDN","No relation"],"answer":1},
+      {"question":"What is a vSwitch?","options":["Virtual switch in hypervisor","Physical switch","Cloud router","Firewall"],"answer":0},
+      {"question":"What is VXLAN?","options":["Virtual Extensible LAN – overlay network","Video X LAN","Very eXtreme LAN","VLAN extension"],"answer":0},
+      {"question":"What is the purpose of VXLAN?","options":["Extend Layer 2 over Layer 3","Encrypt traffic","Replace VLANs","Increase MTU"],"answer":0},
+      {"question":"What is Geneve?","options":["Generic Network Virtualization Encapsulation","Geneva protocol","Genetic network","Not real"],"answer":0},
+      {"question":"What is EVPN?","options":["Ethernet VPN – control plane for VXLAN","Enhanced VPN","External VPN","Enterprise VPN"],"answer":0},
+      {"question":"What is the main challenge in data center networking?","options":["Low bandwidth","East-west traffic scaling","North-south traffic only","No virtualization"],"answer":1},
+      {"question":"What is leaf-spine architecture?","options":["Traditional tree","Two-tier Clos fabric for scalability","Ring topology","Mesh"],"answer":1},
+      {"question":"What is ECMP?","options":["Equal-Cost Multi-Path routing","Enhanced Cost Multi-Path","Ethernet Channel Multi-Port","External Connection Multi-Protocol"],"answer":0},
+      {"question":"What is TRILL?","options":["Transparent Interconnection of Lots of Links – for multi-path bridging","Not used","Old routing protocol","Wireless standard"],"answer":0},
+      {"question":"What is FabricPath?","options":["Cisco proprietary TRILL-like technology","Open standard","Wireless mesh","Not real"],"answer":0},
+      {"question":"What is the main goal of data center fabric?","options":["Maximize oversubscription","Minimize latency and maximize bisection bandwidth","Use only Layer 2","Avoid redundancy"],"answer":1},
+      {"question":"What is telemetry in networking?","options":["Manual log checking","Automated, real-time streaming of network data","Email alerts","Ping sweeps"],"answer":0},
+      {"question":"What is gRPC?","options":["Google Remote Procedure Call – used in telemetry","Graphical RPC","General Routing Protocol","Not related"],"answer":0},
+      {"question":"What is YANG?","options":["Data modeling language for network configs","Chinese protocol","Old routing","Not real"],"answer":0},
+      {"question":"What is NETCONF?","options":["Network Configuration Protocol using XML","New TCP","Not used","Legacy"],"answer":0},
+      {"question":"What is RESTCONF?","options":["REST-like protocol for network config","Replacement for HTTP","Not real","Old standard"],"answer":0},
+      {"question":"What is Ansible used for?","options":["Network automation","Web browsing","Email","File transfer"],"answer":0},
+      {"question":"What is Python commonly used for in networking?","options":["Automation and scripting","Only web apps","Not used","Gaming"],"answer":0},
+      {"question":"What is the main benefit of network automation?","options":["More manual work","Consistency, speed, reduced errors","Higher cost","Less security"],"answer":1},
+      {"question":"What is Zero Touch Provisioning (ZTP)?","options":["Manual device setup","Automatic device configuration on boot","No provisioning","Cloud-only"],"answer":1},
+      {"question":"What is intent-based networking?","options":["Configuring each device manually","Declarative policy-driven automation","Old method","Not real"],"answer":1},
+      {"question":"What is assurance in networking?","options":["Configuring devices","Verifying network meets intent","Buying hardware","No meaning"],"answer":1},
+      {"question":"What is AIOps?","options":["AI for IT Operations – anomaly detection, etc.","Audio Ops","Not real","Old term"],"answer":0},
+      {"question":"What is the main security principle in zero trust?","options":["Trust but verify","Never trust, always verify","Trust internal network","Verify once"],"answer":1},
+      {"question":"What is micro-segmentation?","options":["Divide network into small secure zones","Use big firewalls","No segmentation","Cloud-only"],"answer":0},
+      {"question":"What is SASE?","options":["Secure Access Service Edge – cloud-delivered security","Old firewall","Not real","Storage protocol"],"answer":0},
+      {"question":"What is CASB?","options":["Cloud Access Security Broker","Computer Automated Security Box","Not real","Old term"],"answer":0},
+      {"question":"What is the main wireless standard for Wi-Fi 6?","options":["802.11ac","802.11ax","802.11n","802.11g"],"answer":1},
+      {"question":"What is OFDMA in Wi-Fi 6?","options":["Orthogonal Frequency Division Multiple Access – improves efficiency","Old encryption","Not used","Antenna tech"],"answer":0},
+      {"question":"What is MU-MIMO?","options":["Multi-User MIMO – serve multiple clients simultaneously","Single-user only","Not in Wi-Fi","Old tech"],"answer":0},
+      {"question":"What is the frequency band for Wi-Fi 6E?","options":["2.4 GHz","5 GHz","6 GHz","All of the above"],"answer":2},
+      {"question":"What is WPA3?","options":["Latest Wi-Fi security protocol","Old encryption","Not secure","Wired protocol"],"answer":0},
+      {"question":"What is the main improvement of WPA3 over WPA2?","options":["Stronger encryption, protection against offline attacks","Faster speed","More bands","Better antennas"],"answer":0},
+      {"question":"What is a wireless controller?","options":["Manages multiple APs centrally","Replaces routers","Not used","Old tech"],"answer":0},
+      {"question":"What is CAPWAP?","options":["Control And Provisioning of Wireless Access Points","Not real","Old standard","Encryption"],"answer":0},
+      {"question":"What is the difference between autonomous and lightweight APs?","options":["Autonomous work alone; lightweight need controller","No difference","Lightweight are faster","Autonomous are obsolete"],"answer":0},
+      {"question":"What is RF interference in wireless?","options":["Signal blockage","Other devices disrupting signal","Encryption issue","Authentication failure"],"answer":1},
+      {"question":"What is co-channel interference?","options":["Same channel used by nearby APs","Different channels","Wired issue","Not real"],"answer":0},
+      {"question":"What is adjacent-channel interference?","options":["Overlapping channels","Same channel","No issue","Encryption problem"],"answer":0},
+      {"question":"What is the best practice for channel planning?","options":["Use same channel everywhere","Use non-overlapping channels (1,6,11)","Use all channels randomly","Use only channel 1"],"answer":1},
+      {"question":"What is site survey in wireless?","options":["Check coverage and interference before deployment","Buy equipment","Install APs","No need"],"answer":0},
+      {"question":"What is passive site survey?","options":["Listen to existing RF environment","Transmit test signals","Use GPS","Not real"],"answer":0},
+      {"question":"What is active site survey?","options":["Transmit and measure performance","Only listen","Use maps only","Not used"],"answer":0},
+      {"question":"What is predictive site survey?","options":["Simulate using software models","Requires physical presence","Not accurate","Old method"],"answer":0},
+      {"question":"What is roaming in wireless?","options":["Moving between APs without disconnecting","Changing SSID","Losing signal","Connecting to cellular"],"answer":0},
+      {"question":"What is 802.11k?","options":["Radio resource measurement – helps roaming","Security","Speed","Not real"],"answer":0},
+      {"question":"What is 802.11r?","options":["Fast BSS Transition – faster roaming","Security","Channel bonding","Not used"],"answer":0},
+      {"question":"What is 802.11v?","options":["Wireless network management – assists client steering","Roaming","Security","Speed"],"answer":0},
+      {"question":"What is band steering?","options":["Push 5GHz-capable clients to 5GHz band","Force 2.4GHz","Disable bands","Not real"],"answer":0},
+      {"question":"What is load balancing in wireless?","options":["Distribute clients across APs","Use one AP only","Maximize one AP","Not needed"],"answer":0},
+      {"question":"What is airtime fairness?","options":["Give slow clients more time","Give each client equal airtime regardless of speed","Not used","Old concept"],"answer":1},
+      {"question":"What is beamforming?","options":["Focus signal toward client for better performance","Broadcast in all directions","Reduce power","Not real"],"answer":0},
+      {"question":"What is the main cellular generation for IoT?","options":["4G LTE","5G","NB-IoT / LTE-M","3G"],"answer":2},
+      {"question":"What is mMTC in 5G?","options":["Massive Machine-Type Communications","Mobile Media Transport","Not real","Old term"],"answer":0},
+      {"question":"What is URLLC in 5G?","options":["Ultra-Reliable Low-Latency Communications","User Radio Link","Not used","Old standard"],"answer":0},
+      {"question":"What is eMBB in 5G?","options":["Enhanced Mobile Broadband","Extreme Media Bandwidth","Not real","Old term"],"answer":0},
+      {"question":"What is network slicing in 5G?","options":["Divide physical network into virtual slices for different services","Cut cables","Not real","Old concept"],"answer":0},
+      {"question":"What is MEC?","options":["Multi-access Edge Computing – process data near user","Microsoft Edge Cloud","Not real","Old term"],"answer":0},
+      {"question":"What is the main benefit of edge computing?","options":["Higher latency","Lower latency and bandwidth savings","More cloud dependency","Less security"],"answer":1},
+      {"question":"What is IoT?","options":["Internet of Things – connected devices","Old internet","Not secure","Only industrial"],"answer":0},
+      {"question":"What is a common IoT protocol?","options":["HTTP","MQTT","FTP","SMTP"],"answer":1},
+      {"question":"What is CoAP?","options":["Constrained Application Protocol – for IoT","Old web protocol","Not used","Encryption"],"answer":0},
+      {"question":"What is LoRaWAN?","options":["Long Range Wide Area Network – LPWAN for IoT","Wi-Fi variant","Cellular","Not real"],"answer":0},
+      {"question":"What is Zigbee?","options":["Short-range mesh protocol for IoT","Cellular","Wi-Fi","Bluetooth"],"answer":0},
+      {"question":"What is Z-Wave?","options":["Wireless protocol for home automation","Cellular","Wi-Fi","Not real"],"answer":0},
+      {"question":"What is BLE?","options":["Bluetooth Low Energy – for IoT devices","Broadband LAN","Not real","Old Wi-Fi"],"answer":0},
+      {"question":"What is the main security concern in IoT?","options":["Too much bandwidth","Weak security and update mechanisms","High cost","Not used"],"answer":1},
+      {"question":"What is OTA update?","options":["Over-The-Air software update","Old Technology Architecture","Not secure","Wired update"],"answer":0},
+      {"question":"What is a botnet in IoT context?","options":["Legitimate network","Compromised devices used for attacks","Cloud service","Not real"],"answer":1},
+      {"question":"What is the main challenge in IoT scalability?","options":["Device management and security","Too much bandwidth","High cost","Not used"],"answer":0},
+      {"question":"What is fog computing?","options":["Same as cloud","Intermediate layer between edge and cloud","Not real","Old term"],"answer":1},
+      {"question":"What is the difference between fog and edge?","options":["No difference","Edge is on device; fog is near device (e.g., gateway)","Fog is cloud","Edge is older"],"answer":1},
+      {"question":"What is IIoT?","options":["Industrial Internet of Things","International IoT","Not real","Old term"],"answer":0},
+      {"question":"What protocol is common in industrial networks?","options":["Modbus","HTTP","FTP","SMTP"],"answer":0},
+      {"question":"What is OPC UA?","options":["Open Platform Communications Unified Architecture – industrial interoperability","Old protocol","Not secure","Web standard"],"answer":0},
+      {"question":"What is time-sensitive networking (TSN)?","options":["IEEE standards for deterministic Ethernet","Wi-Fi enhancement","Not real","Old concept"],"answer":0},
+      {"question":"What is the main goal of TSN?","options":["Higher speed","Guaranteed latency and synchronization for real-time traffic","More security","Less cost"],"answer":1},
+      {"question":"What is PROFINET?","options":["Industrial Ethernet protocol","Wi-Fi standard","Not real","Old serial"],"answer":0},
+      {"question":"What is EtherNet/IP?","options":["Industrial protocol using CIP over Ethernet","Internet Protocol for Ethernet","Not real","Old term"],"answer":0},
+      {"question":"What is the main challenge in industrial networks?","options":["High bandwidth","Determinism and reliability","Too many vendors","Not used"],"answer":1},
+      {"question":"What is a PLC?","options":["Programmable Logic Controller – industrial computer","Personal Laptop Computer","Not real","Old switch"],"answer":0},
+      {"question":"What is SCADA?","options":["Supervisory Control and Data Acquisition – industrial monitoring","Old database","Not secure","Web app"],"answer":0},
+      {"question":"What is DCS?","options":["Distributed Control System – industrial automation","Data Center Switch","Not real","Old term"],"answer":0},
+      {"question":"What is the Purdue Model?","options":["Industrial network segmentation model","Old routing","Not used","Cloud model"],"answer":0},
+      {"question":"What is Level 0 in Purdue Model?","options":["Enterprise","Control","Process/device level","Site operations"],"answer":2},
+      {"question":"What is Level 3 in Purdue Model?","options":["Process","Control","Site operations","Enterprise"],"answer":2},
+      {"question":"What is the main security principle in industrial networks?","options":["Air gap","Zero trust","No security needed","Same as IT"],"answer":0},
+      {"question":"What is ICS?","options":["Industrial Control System","Internet Control System","Not real","Old term"],"answer":0},
+      {"question":"What is OT?","options":["Operational Technology – industrial systems","Old Technology","Optical Transport","Not real"],"answer":0},
+      {"question":"What is the main difference between IT and OT?","options":["OT prioritizes availability; IT prioritizes confidentiality","No difference","OT is faster","IT is older"],"answer":0},
+      {"question":"What is a DMZ in industrial context?","options":["Demilitarized Zone – buffer between IT and OT","Not used","Old concept","Same as IT"],"answer":0},
+      {"question":"What is unidirectional gateway (data diode)?","options":["Allows data flow in one direction only for security","Old firewall","Not real","Bi-directional"],"answer":0},
+      {"question":"What is asset inventory in OT security?","options":["List of all devices and software","Financial report","Not needed","Old practice"],"answer":0},
+      {"question":"What is vulnerability management in OT?","options":["Patch everything immediately","Assess risk before patching due to uptime needs","Ignore vulnerabilities","Same as IT"],"answer":1},
+      {"question":"What is network monitoring in OT?","options":["Passive monitoring to avoid disruption","Active scanning","Not used","Same as IT"],"answer":0},
+      {"question":"What is incident response in OT?","options":["Shut down immediately","Prioritize safety and continuity","Same as IT","Not needed"],"answer":1},
+      {"question":"What is compliance in OT?","options":["Follow standards like NIST, IEC 62443","Not required","Same as IT","Old concept"],"answer":0},
+      {"question":"What is IEC 62443?","options":["International standard for industrial cybersecurity","Old routing","Not real","Wi-Fi standard"],"answer":0},
+      {"question":"What is NIST SP 800-82?","options":["Guide to Industrial Control Systems Security","Old document","Not used","Web standard"],"answer":0},
+      {"question":"What is the main goal of network design?","options":["Maximize cost","Meet requirements with scalability, reliability, security","Use latest tech only","Copy others"],"answer":1},
+      {"question":"What is hierarchical network design?","options":["Core, distribution, access layers","Flat network","Mesh only","Not used"],"answer":0},
+      {"question":"What is the core layer responsible for?","options":["Connect end devices","High-speed backbone switching","Policy enforcement","Security"],"answer":1},
+      {"question":"What is the distribution layer responsible for?","options":["Connect users","Aggregate access layer, enforce policies","Core routing","Wireless"],"answer":1},
+      {"question":"What is the access layer responsible for?","options":["High-speed backbone","Connect end devices","Internet edge","Data center"],"answer":1},
+      {"question":"What is redundancy in network design?","options":["Duplicate critical components for failover","Waste money","Not needed","Old concept"],"answer":0},
+      {"question":"What is HSRP/VRRP used for?","options":["Load balancing","Default gateway redundancy","Security","Wireless"],"answer":1},
+      {"question":"What is link aggregation (LACP) used for?","options":["Increase bandwidth and redundancy","Security","Wireless","Not real"],"answer":0},
+      {"question":"What is the main WAN technology today?","options":["MPLS","Leased lines","Metro Ethernet","All of the above"],"answer":3},
+      {"question":"What is MPLS?","options":["Multi-Protocol Label Switching – efficient forwarding","Old routing","Not used","Wireless"],"answer":0},
+      {"question":"What is the main benefit of MPLS?","options":["Encryption","Traffic engineering and QoS","Lower cost than Internet","Not real"],"answer":1},
+      {"question":"What is SD-WAN?","options":["Software-Defined WAN – use Internet with intelligence","Old WAN","Not secure","Replace MPLS only"],"answer":0},
+      {"question":"What is the main benefit of SD-WAN?","options":["Lower cost, flexibility, cloud optimization","Higher latency","Less security","Not scalable"],"answer":0},
+      {"question":"What is DIA?","options":["Dedicated Internet Access","Dynamic IP Assignment","Not real","Old term"],"answer":0},
+      {"question":"What is BGP used for in enterprise WAN?","options":["Internal routing","Connect to multiple ISPs for redundancy","Not used","Replace OSPF"],"answer":1},
+      {"question":"What is multihoming?","options":["Connect to multiple ISPs","Use multiple IPs","Not real","Old concept"],"answer":0},
+      {"question":"What is the main cloud connectivity option?","options":["Internet","Direct connect (e.g., AWS Direct Connect)","Both","Neither"],"answer":2},
+      {"question":"What is the main security concern in cloud networking?","options":["Shared responsibility model","Too much bandwidth","High cost","Not used"],"answer":0},
+      {"question":"What is VPC?","options":["Virtual Private Cloud – isolated cloud network","Very Private Cloud","Not real","Old term"],"answer":0},
+      {"question":"What is a cloud security group?","options":["Firewall rules for instances","User group","Not real","Old concept"],"answer":0},
+      {"question":"What is NACL?","options":["Network Access Control List – stateless firewall at subnet level","Not real","Old term","User list"],"answer":0},
+      {"question":"What is the difference between security group and NACL?","options":["Security group is stateful; NACL is stateless","No difference","NACL is stateful","Security group is stateless"],"answer":0},
+      {"question":"What is cloud load balancer?","options":["Distribute traffic across instances","Not real","Old concept","Only for databases"],"answer":0},
+      {"question":"What is auto-scaling?","options":["Automatically add/remove instances based on demand","Manual scaling","Not used","Old term"],"answer":0},
+      {"question":"What is the main network challenge in hybrid cloud?","options":["Latency and security between on-prem and cloud","Too much bandwidth","High cost","Not used"],"answer":0},
+      {"question":"What is Direct Connect / ExpressRoute?","options":["Private, high-speed connection to cloud provider","Public Internet","Not real","Old concept"],"answer":0},
+      {"question":"What is the main benefit of private cloud connection?","options":["Lower latency, higher security, predictable performance","Cheaper than Internet","Not real","Old term"],"answer":0},
+      {"question":"What is network virtualization in cloud?","options":["Create logical networks independent of physical","Not used","Old concept","Only for storage"],"answer":0},
+      {"question":"What is overlay network?","options":["Network built on top of another (e.g., VXLAN)","Physical network","Not real","Old term"],"answer":0},
+      {"question":"What is underlay network?","options":["Physical network infrastructure","Logical network","Not real","Old concept"],"answer":0},
+      {"question":"What is the main benefit of network automation in cloud?","options":["Consistency, speed, reduced errors","Higher cost","Less security","Not needed"],"answer":0},
+      {"question":"What is Infrastructure as Code (IaC)?","options":["Manage infrastructure via code (e.g., Terraform)","Not real","Old concept","Only for servers"],"answer":0},
+      {"question":"What is the main network monitoring tool in cloud?","options":["Cloud provider tools (e.g., CloudWatch, Azure Monitor)","Not needed","Old tools","Same as on-prem"],"answer":0},
+      {"question":"What is the main challenge in multicloud networking?","options":["Complexity in connectivity and security","Too much bandwidth","High cost","Not used"],"answer":0},
+      {"question":"What is service mesh?","options":["Dedicated infrastructure layer for service-to-service communication","Not real","Old concept","Only for databases"],"answer":0},
+      {"question":"What is Istio?","options":["Service mesh implementation","Not real","Old term","Database"],"answer":0},
+      {"question":"What is the main benefit of service mesh?","options":["Observability, security, traffic control for microservices","Higher latency","More cost","Not needed"],"answer":0},
+      {"question":"What is east-west traffic?","options":["Traffic between data centers","Traffic between clients and servers","Traffic between services within data center","Internet traffic"],"answer":2},
+      {"question":"What is north-south traffic?","options":["Traffic between services","Traffic between data center and external world","Internal traffic","Not real"],"answer":1},
+      {"question":"What is the main security model for microservices?","options":["Perimeter security","Zero trust","No security","Same as monolith"],"answer":1},
+      {"question":"What is mutual TLS (mTLS)?","options":["Encrypt traffic between services with certificate authentication","Old encryption","Not real","Only for clients"],"answer":0},
+      {"question":"What is the main network requirement for Kubernetes?","options":["CNI plugin for pod networking","Not needed","Old concept","Only for storage"],"answer":0},
+      {"question":"What is CNI?","options":["Container Network Interface","Not real","Old term","Cloud Network Interface"],"answer":0},
+      {"question":"What is Calico?","options":["CNI plugin and network policy engine","Not real","Old term","Database"],"answer":0},
+      {"question":"What is the main challenge in container networking?","options":["IP management and policy at scale","Too much bandwidth","High cost","Not used"],"answer":0},
+      {"question":"What is network policy in Kubernetes?","options":["Define allowed traffic between pods","Not real","Old concept","Only for nodes"],"answer":0},
+      {"question":"What is the main benefit of IPv6?","options":["Larger address space","Faster routing","More security","All of the above"],"answer":3},
+      {"question":"Does IPv6 have broadcast?","options":["Yes","No – uses multicast instead","Only for DNS","Not real"],"answer":1},
+      {"question":"What is SLAAC?","options":["Stateless Address Autoconfiguration – for IPv6","Not real","Old term","Security protocol"],"answer":0},
+      {"question":"What is DHCPv6?","options":["Dynamic Host Configuration Protocol for IPv6","Not real","Old term","Only for IPv4"],"answer":0},
+      {"question":"What is the IPv6 loopback address?","options":["::1","127.0.0.1","::","fe80::1"],"answer":0},
+      {"question":"What is link-local address in IPv6?","options":["fe80::/10","2000::/3","::1","fc00::/7"],"answer":0},
+      {"question":"What is unique local address (ULA) in IPv6?","options":["fc00::/7","fe80::/10","2000::/3","::1"],"answer":0},
+      {"question":"What is global unicast address in IPv6?","options":["2000::/3","fc00::/7","fe80::/10","::1"],"answer":0},
+      {"question":"What is the IPv6 equivalent of APIPA?","options":["fe80::/10","fc00::/7","2000::/3","::1"],"answer":0},
+      {"question":"What is dual stack?","options":["Run IPv4 and IPv6 simultaneously","Not real","Old concept","Only for servers"],"answer":0},
+      {"question":"What is tunneling in IPv6 transition?","options":["Encapsulate IPv6 in IPv4 (or vice versa)","Not real","Old term","Only for security"],"answer":0},
+      {"question":"What is 6to4?","options":["Automatic IPv6-over-IPv4 tunneling","Not real","Old term","Only for DNS"],"answer":0},
+      {"question":"What is Teredo?","options":["IPv6 transition technology through NATs","Not real","Old term","Only for Windows"],"answer":0},
+      {"question":"What is ISATAP?","options":["Intra-Site Automatic Tunnel Addressing Protocol – for enterprise","Not real","Old term","Only for Internet"],"answer":0},
+      {"question":"What is the main challenge in IPv6 deployment?","options":["Address shortage","Application and device support","Too much security","Not needed"],"answer":1},
+      {"question":"What is the main benefit of IPv6 for IoT?","options":["Enough addresses for every device","Faster speed","More security","All of the above"],"answer":3},
+      {"question":"What is RA in IPv6?","options":["Router Advertisement – part of NDP","Not real","Old term","Security protocol"],"answer":0},
+      {"question":"What is RS in IPv6?","options":["Router Solicitation – part of NDP","Not real","Old term","Only for servers"],"answer":0},
+      {"question":"What is NA in IPv6?","options":["Neighbor Advertisement – part of NDP","Not real","Old term","Security"],"answer":0},
+      {"question":"What is NS in IPv6?","options":["Neighbor Solicitation – part of NDP","Not real","Old term","Only for DNS"],"answer":0},
+      {"question":"What replaces IGMP in IPv6?","options":["MLD (Multicast Listener Discovery)","Not real","Old term","ICMPv6 only"],"answer":0},
+      {"question":"What is the main multicast address for all routers in IPv6?","options":["ff02::2","ff02::1","ff02::1:ff00:0/104","::1"],"answer":0},
+      {"question":"What is the main multicast address for all nodes in IPv6?","options":["ff02::1","ff02::2","ff02::1:ff00:0/104","::1"],"answer":0},
+      {"question":"What is solicited-node multicast address?","options":["Used for NDP to map IPv6 to MAC","Not real","Old term","Only for security"],"answer":0},
+      {"question":"What is the format of solicited-node address?","options":["ff02:0:0:0:0:1:ffXX:XXXX","fe80::","2001::","::1"],"answer":0},
+      {"question":"What is the main improvement of ICMPv6 over ICMPv4?","options":["More messages, integral to IPv6 operation (e.g., NDP)","Faster","More secure","Not real"],"answer":0},
+      {"question":"What is Path MTU Discovery in IPv6?","options":["Uses ICMPv6 Packet Too Big to find MTU","Not used","Old concept","Only for IPv4"],"answer":0},
+      {"question":"Is fragmentation done by hosts in IPv6?","options":["Yes – routers do not fragment","No – routers fragment","Both","Neither"],"answer":0},
+      {"question":"What is the minimum MTU for IPv6?","options":["1280 bytes","1500 bytes","576 bytes","68 bytes"],"answer":0},
+      {"question":"What is extension header in IPv6?","options":["Optional headers for features like routing, fragmentation","Not real","Old term","Only for security"],"answer":0},
+      {"question":"What is the Hop-by-Hop Options header?","options":["Must be processed by every router","Only by destination","Not used","Old concept"],"answer":0},
+      {"question":"What is the Routing header?","options":["Specifies list of intermediate nodes","Not real","Old term","Only for security"],"answer":0},
+      {"question":"What is the Fragment header?","options":["Used when host fragments packet","Not real","Old term","Only for routers"],"answer":0},
+      {"question":"What is the Destination Options header?","options":["Processed only by destination","By every router","Not used","Old concept"],"answer":0},
+      {"question":"What is the main challenge with IPv6 extension headers?","options":["Processing overhead and security filtering","Too short","Not real","Old concept"],"answer":0},
+      {"question":"What is the flow label in IPv6?","options":["Identify packets for same flow for QoS","Not real","Old term","Only for security"],"answer":0},
+      {"question":"What is the main benefit of flow label?","options":["Enable efficient flow-based forwarding","Faster encryption","More addresses","Not real"],"answer":0},
+      {"question":"What is the scope of link-local address?","options":["Single link only","Entire internet","Site only","Organization"],"answer":0},
+      {"question":"What is the scope of unique local address (ULA)?","options":["Global internet","Single link","Site or organization","Not real"],"answer":2},
+      {"question":"What is the scope of global unicast address?","options":["Global internet","Site only","Link only","Organization"],"answer":0},
+      {"question":"How is interface ID generated in SLAAC?","options":["EUI-64 or random","DHCP only","Manual only","Not real"],"answer":0},
+      {"question":"What is privacy extensions in IPv6?","options":["Use random interface IDs to prevent tracking","Not real","Old term","Only for servers"],"answer":0},
+      {"question":"What is the main security concern with SLAAC?","options":["Rogue router advertisements","Too many addresses","Not real","Old concept"],"answer":0},
+      {"question":"What is RA Guard?","options":["Switch feature to block rogue RAs","Not real","Old term","Only for servers"],"answer":0},
+      {"question":"What is SEND?","options":["Secure Neighbor Discovery – uses cryptography","Not real","Old term","Only for IPv4"],"answer":0},
+      {"question":"Is SEND widely deployed?","options":["Yes","No – complexity and lack of support","Only in military","Not real"],"answer":1},
+      {"question":"What is the main transition mechanism recommended today?","options":["Dual stack","Tunneling","NAT64","Not real"],"answer":0},
+      {"question":"What is NAT64?","options":["Translate IPv6 to IPv4","Not real","Old term","Only for DNS"],"answer":0},
+      {"question":"What is DNS64?","options":["Synthesize AAAA records for IPv6-only clients","Not real","Old term","Only for servers"],"answer":0},
+      {"question":"What is 464XLAT?","options":["Combines NAT64 and CLAT for IPv4-only apps on IPv6-only network","Not real","Old term","Only for mobile"],"answer":0},
+      {"question":"What is the main challenge in IPv6 security?","options":["Larger address space makes scanning hard, but misconfigurations are risky","Too much security","Not real","Old concept"],"answer":0},
+      {"question":"What is the main operational challenge in IPv6?","options":["Address management and documentation","Too many addresses","Not real","Old concept"],"answer":0},
+      {"question":"What is the future of IPv6?","options":["Gradual adoption, coexistence with IPv4 for years","Immediate replacement","Not needed","Old concept"],"answer":0}
+    ];
+
+    // State
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    // DOM elements
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const feedbackEl = document.getElementById("feedback");
+
+    // Display current question
+    function showQuestion() {
+      if (currentQuestionIndex >= questions.length) {
+        showFinalScore();
+        return;
+      }
+
+      const q = questions[currentQuestionIndex];
+      questionEl.textContent = `${currentQuestionIndex + 1}. ${q.question}`;
+      optionsEl.innerHTML = "";
+      feedbackEl.textContent = "";
+
+      q.options.forEach((option, index) => {
+        const button = document.createElement("div");
+        button.classList.add("option");
+        button.textContent = String.fromCharCode(65 + index) + ". " + option; // A. B. C. D.
+        button.onclick = () => selectOption(index);
+        optionsEl.appendChild(button);
+      });
+    }
+
+    // Handle option selection
+    function selectOption(selectedIndex) {
+      const q = questions[currentQuestionIndex];
+      const options = document.querySelectorAll(".option");
+
+      // Disable further clicks
+      options.forEach(opt => opt.style.pointerEvents = "none");
+
+      if (selectedIndex === q.answer) {
+        options[selectedIndex].classList.add("correct");
+        feedbackEl.textContent = "✓ Correct!";
+        feedbackEl.className = "feedback correct";
+        score++;
+      } else {
+        options[selectedIndex].classList.add("incorrect");
+        options[q.answer].classList.add("correct");
+        feedbackEl.textContent = "✗ Incorrect!";
+        feedbackEl.className = "feedback incorrect";
+      }
+
+      // Next question after 1 second
+      setTimeout(() => {
+        currentQuestionIndex++;
+        showQuestion();
+      }, 1000);
+    }
+
+    // Show final score
+    function showFinalScore() {
+      questionEl.innerHTML = `<div class="end-screen">Quiz Completed!<br>Your Score: ${score} / ${questions.length}</div>`;
+      optionsEl.innerHTML = "";
+      feedbackEl.textContent = "";
+    }
+
+    // Start quiz
+    showQuestion();
+  </script>
+</body>
+</html>
+
