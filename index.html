@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Advanced Networks Final Quiz</title>
+  <title>Advanced Networks Final Quiz (314 Questions)</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -145,11 +145,42 @@
     .nav-btn.previous:hover {
       background: #343a40;
     }
+    .nav-btn.clear {
+      background: #dc3545;
+      margin-left: 10px;
+    }
+    .nav-btn.clear:hover {
+      background: #c82333;
+    }
+    .nav-buttons-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .nav-buttons-left {
+      display: flex;
+      gap: 10px;
+    }
+    .nav-buttons-right {
+      display: flex;
+      gap: 10px;
+    }
+    .saved-notice {
+      background: #e7f5ff;
+      color: #1864ab;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
   </style>
 </head>
 <body>
   <div class="quiz-container">
-    <h1>Advanced Networks Final Quiz </h1>
+    <h1>Advanced Networks Final Quiz (314 Questions)</h1>
     
     <div class="stats-bar">
       <div class="score">Score: <span id="score">0</span></div>
@@ -161,19 +192,27 @@
       </div>
     </div>
     
+    <div class="saved-notice" id="saved-notice">
+      ✓ Progress saved automatically
+    </div>
+    
     <div class="question" id="question"></div>
     <div class="options" id="options"></div>
     <div class="feedback" id="feedback"></div>
     
-    <div class="navigation-buttons">
-      <button class="nav-btn previous" id="prev-btn" disabled>← Previous</button>
-      <button class="nav-btn" id="next-btn">Next →</button>
+    <div class="nav-buttons-row">
+      <div class="nav-buttons-left">
+        <button class="nav-btn previous" id="prev-btn" disabled>← Previous</button>
+        <button class="nav-btn" id="next-btn">Next →</button>
+      </div>
+      <div class="nav-buttons-right">
+        <button class="nav-btn clear" id="clear-btn">Clear Progress</button>
+      </div>
     </div>
   </div>
 
   <script>
-   
-    const questions = [
+ const questions = [
       {"question":"Which of the following is NOT an application-layer protocol?","options":["HTTP","SMTP","TCP","FTP"],"answer":2},
       {"question":"In a 100 Mbps Ethernet network, if a packet is 32 bits long, what is the transmission delay (in microseconds)?","options":["320","3.2","32","0.32"],"answer":3},
       {"question":"In which type of switching is bandwidth variable?","options":["Packet switching","Both circuit and packet switching","Neither","Circuit switching"],"answer":0},
@@ -614,6 +653,7 @@
       {"question":"What is the future of IPv6?","options":["Gradual adoption, coexistence with IPv4 for years","Immediate replacement","Not needed","Old concept"],"answer":0}
     ];
 
+
     // State
     let currentQuestionIndex = 0;
     let score = 0;
@@ -629,9 +669,66 @@
     const progressBar = document.getElementById("progress-bar");
     const prevBtn = document.getElementById("prev-btn");
     const nextBtn = document.getElementById("next-btn");
+    const clearBtn = document.getElementById("clear-btn");
+    const savedNotice = document.getElementById("saved-notice");
 
     // Initialize total questions
     totalQEl.textContent = questions.length;
+
+    // Save quiz state to localStorage
+    function saveQuizState() {
+      const state = {
+        currentQuestionIndex,
+        score,
+        userAnswers,
+        timestamp: Date.now()
+      };
+      localStorage.setItem('quizState', JSON.stringify(state));
+      
+      // Show saved notice
+      savedNotice.style.display = 'block';
+      setTimeout(() => {
+        savedNotice.style.display = 'none';
+      }, 2000);
+    }
+
+    // Load quiz state from localStorage
+    function loadQuizState() {
+      const saved = localStorage.getItem('quizState');
+      if (saved) {
+        try {
+          const state = JSON.parse(saved);
+          // Check if state is not too old (optional - 7 days)
+          const now = Date.now();
+          const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
+          
+          if (now - state.timestamp < maxAge) {
+            currentQuestionIndex = state.currentQuestionIndex || 0;
+            score = state.score || 0;
+            userAnswers = state.userAnswers || Array(questions.length).fill(null);
+            return true;
+          } else {
+            // State is too old, clear it
+            localStorage.removeItem('quizState');
+          }
+        } catch (e) {
+          console.log("Could not load saved state:", e);
+        }
+      }
+      return false;
+    }
+
+    // Clear all progress
+    function clearProgress() {
+      if (confirm("Are you sure you want to clear all progress? This cannot be undone.")) {
+        localStorage.removeItem('quizState');
+        currentQuestionIndex = 0;
+        score = 0;
+        userAnswers = Array(questions.length).fill(null);
+        showQuestion();
+        alert("Progress cleared!");
+      }
+    }
 
     // Update progress and score display
     function updateStats() {
@@ -644,7 +741,7 @@
       prevBtn.disabled = currentQuestionIndex === 0;
       
       if (currentQuestionIndex >= questions.length - 1) {
-        nextBtn.textContent = "Finish";
+        nextBtn.textContent = "Finish Quiz";
       } else {
         nextBtn.textContent = "Next →";
       }
@@ -712,11 +809,20 @@
         feedbackEl.className = "feedback incorrect";
       }
 
+      // Save state
+      saveQuizState();
+
       // Auto move to next question after 1 second
       setTimeout(() => {
         if (currentQuestionIndex < questions.length - 1) {
           currentQuestionIndex++;
           showQuestion();
+          saveQuizState();
+        } else if (currentQuestionIndex === questions.length - 1) {
+          // إذا كان هذا آخر سؤال، انتقل للنتيجة النهائية
+          currentQuestionIndex++;
+          showFinalScore();
+          saveQuizState();
         }
       }, 1000);
     }
@@ -724,24 +830,48 @@
     // Show final score
     function showFinalScore() {
       const percentage = Math.round((score / questions.length) * 100);
+      let message = "";
+      if (percentage >= 90) message = "Excellent! 🎉";
+      else if (percentage >= 70) message = "Good job! 👍";
+      else if (percentage >= 50) message = "Not bad! 😊";
+      else message = "Keep practicing! 📚";
+      
       questionEl.innerHTML = `
         <div class="end-screen">
           <h2>Quiz Completed!</h2>
-          <p>Your Score: ${score} / ${questions.length}</p>
-          <p>Percentage: ${percentage}%</p>
+          <p>${message}</p>
+          <p>Your Score: <strong>${score} / ${questions.length}</strong></p>
+          <p>Percentage: <strong>${percentage}%</strong></p>
+          <button class="nav-btn" onclick="restartQuiz()" style="margin-top: 20px;">Restart Quiz</button>
         </div>
       `;
       optionsEl.innerHTML = "";
       feedbackEl.textContent = "";
       prevBtn.style.display = "none";
       nextBtn.style.display = "none";
+      clearBtn.style.display = "none";
     }
+
+    // Restart quiz function
+    window.restartQuiz = function() {
+      if (confirm("Restart the quiz from the beginning?")) {
+        localStorage.removeItem('quizState');
+        currentQuestionIndex = 0;
+        score = 0;
+        userAnswers = Array(questions.length).fill(null);
+        prevBtn.style.display = "inline-block";
+        nextBtn.style.display = "inline-block";
+        clearBtn.style.display = "inline-block";
+        showQuestion();
+      }
+    };
 
     // Navigation handlers
     prevBtn.onclick = () => {
       if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
         showQuestion();
+        saveQuizState();
       }
     };
 
@@ -749,13 +879,48 @@
       if (currentQuestionIndex < questions.length - 1) {
         currentQuestionIndex++;
         showQuestion();
-      } else {
+        saveQuizState();
+      } else if (currentQuestionIndex === questions.length - 1) {
+        currentQuestionIndex++;
         showFinalScore();
+        saveQuizState();
       }
     };
 
-    // Start quiz
-    showQuestion();
+    // Clear progress button
+    clearBtn.onclick = clearProgress;
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' && !prevBtn.disabled) {
+        prevBtn.click();
+      } else if (e.key === 'ArrowRight' && currentQuestionIndex < questions.length) {
+        nextBtn.click();
+      } else if (e.key >= '1' && e.key <= '4' && currentQuestionIndex < questions.length) {
+        // Allow 1-4 keys to select answers
+        const optionIndex = parseInt(e.key) - 1;
+        const options = document.querySelectorAll('.option');
+        if (optionIndex < options.length && !options[optionIndex].style.pointerEvents) {
+          options[optionIndex].click();
+        }
+      }
+    });
+
+    // Auto-save when leaving page
+    window.addEventListener('beforeunload', () => {
+      if (currentQuestionIndex < questions.length) {
+        saveQuizState();
+      }
+    });
+
+    // Initialize quiz
+    window.onload = function() {
+      const loaded = loadQuizState();
+      if (loaded) {
+        console.log("Loaded saved progress");
+      }
+      showQuestion();
+    };
   </script>
 </body>
 </html>
